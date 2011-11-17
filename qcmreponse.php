@@ -74,7 +74,7 @@ foreach($array as $element){
 
 ?>
 <p>
-    <strong>Ta note : <?php echo $note_totale ; ?></strong><br />
+    <strong>Note : <?php echo $note_totale ; ?>/10</strong><br />
 </p>
 
 
