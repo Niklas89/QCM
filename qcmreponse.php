@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 
 $db = array();
@@ -38,10 +38,26 @@ if(!$result){
 
 var_dump($_POST);
 
-$array = array($_POST); 
+$row = mysql_fetch_array($result, MYSQL_ASSOC);
+$array = array($_POST);
+
 foreach($array as $element){
 	foreach($element as $cle => $element2){
-		echo '[' . $cle . '] vaut ' . $element2 . '<br />';
+	
+		$question = 'SELECT id_quiz, question, reponse
+		FROM quiz
+		WHERE id_quiz='.$cle;
+		$result_question = mysql_query($question);
+		$row_question = mysql_fetch_array($result_question, MYSQL_ASSOC);
+		
+		echo 'La question est : '.$row_question['question'].'<br />';
+		echo 'Vous avez répondu : ' . $element2.'<br />'; //echo 'Vous avez répondu : [' . $cle . ']' . $element2;
+		$verif_reponse = mysql_num_rows(mysql_query('SELECT id_quiz FROM quiz WHERE reponse="'.$element2.'"'));
+		if($verif_reponse == 0){
+		echo' C\'est une mauvaise réponse !
+		La bonne réponse est : '. $row_question['reponse'].'<br /><br />';
+		}
+		else{echo' C\'est une bonne réponse !<br /><br />';}
 	}
 }
 
