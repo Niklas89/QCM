@@ -36,7 +36,7 @@ if(!$result){
 	die('erreur dans la requete : ' . mysql_error());
 }
 
-var_dump($_POST);
+// var_dump($_POST);
 
 $row = mysql_fetch_array($result, MYSQL_ASSOC);
 $array = array($_POST);
@@ -44,6 +44,9 @@ $array = array($_POST);
 foreach($array as $element){
 	foreach($element as $cle => $element2){
 	
+	if (strcspn($_REQUEST[$cle], '0123456789') != strlen($_REQUEST[$cle])) // if $cle is a number
+		{
+		
 		$question = 'SELECT id_quiz, question, reponse
 		FROM quiz
 		WHERE id_quiz='.$cle;
@@ -53,13 +56,30 @@ foreach($array as $element){
 		echo 'La question est : '.$row_question['question'].'<br />';
 		echo 'Vous avez répondu : ' . $element2.'<br />'; //echo 'Vous avez répondu : [' . $cle . ']' . $element2;
 		$verif_reponse = mysql_num_rows(mysql_query('SELECT id_quiz FROM quiz WHERE reponse="'.$element2.'"'));
-		if($verif_reponse == 0){
-		echo' C\'est une mauvaise réponse !
-		La bonne réponse est : '. $row_question['reponse'].'<br /><br />';
-		}
-		else{echo' C\'est une bonne réponse !<br /><br />';}
-	}
-}
+		
+		
+		
+			if($verif_reponse == false){
+			echo' C\'est une mauvaise réponse !
+			La bonne réponse est : '. $row_question['reponse'].'<br /><br />';
+			}
+			elseif ($verif_reponse == true) {
+			$note_totale = $note_totale + 1;
+			echo ' C\'est une bonne réponse !<br /><br />';
+			}
+			
+		} //close if (strcspn($_REQUEST[$cle], '0123456789') != strlen($_REQUEST[$cle]))
+	} //close foreach($element as $cle => $element2)
+} // close foreach($array as $element)
+
+?>
+<p>
+    <strong>Ta note : <?php echo $note_totale ; ?></strong><br />
+</p>
+
+
+
+<?php
 
 /*
 $array = array($_POST); 
